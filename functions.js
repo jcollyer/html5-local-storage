@@ -4,7 +4,8 @@ $(function(){
   var selected_index = -1; //Index of the selected list item
   var tbClients = localStorage.getItem("tbClients");//Retrieve the stored data
   tbClients = JSON.parse(tbClients); //Converts string to object
-  if(tbClients == null) //If there is no data, initialize an empty array tbClients = [];
+  if(tbClients == null) //If there is no data, initialize an empty array
+    tbClients = [];
 });
 
 function Add(){
@@ -40,21 +41,37 @@ function Delete(){
 
 function List(){
   $("#tblList").html("");
-  $("#tblList").html( "<thead>"+ " <tr>"+ "  <th></th>"+ " <th>ID</th>"+ " <th>Name</th>"+ " <th>Phone</th>"+
-                      "  <th>Email</th>"+ "  </tr>"+ "</thead>"+ "<tbody>"+ "</tbody>" );
+  $("#tblList").html( "<thead>"+ " <tr>"+ "  <th></th>"+ " <th>ID</th>"+ " <th>Name</th>"+ " <th>Phone</th>"+ "  <th>Email</th>"+ "  </tr>"+ "</thead>"+ "<tbody>"+ "</tbody>" );
   for(var i in tbClients){
     var cli = JSON.parse(tbClients[i]);
-    $("#tblList tbody").append("<tr>"+ "  <td><img src='edit.png' alt='Edit"+i+"' class='btnEdit'/>
-                                          <img src='delete.png' alt='Delete"+i+"' class='btnDelete'/></td>" + "
-                                          <td>"+cli.ID+"</td>" + "  <td>"+cli.Name+"</td>" + "  <td>"+cli.Phone+"</td>" + "
-                                          <td>"+cli.Email+"</td>" + "</tr>");
+    $("#tblList tbody").append("<tr>"+ "  <td><img src='edit.png' alt='Edit"+i+"' class='btnEdit'/><img src='delete.png' alt='Delete"+i+"' class='btnDelete'/></td>" + "  <td>"+cli.ID+"</td>" + "  <td>"+cli.Name+"</td>" + "  <td>"+cli.Phone+"</td>" + " <td>"+cli.Email+"</td>" + "</tr>");
   }
 }
 
 
+$("#frmCadastre").bind("submit",function(){
+  if(operation == "A")
+    return Add();
+  else
+    return Edit();
+});
 
-Read more: http://mrbool.com/creating-a-crud-form-with-html5-local-storage-and-json/26719#ixzz32NcAGEe4
+$(".btnEdit").bind("click", function(){
+  operation = "E";
+  selected_index = parseInt($(this).attr("alt").replace("Edit", ""));
+  var cli = JSON.parse(tbClients[selected_index]);
+  $("#txtID").val(cli.ID);
+  $("#txtName").val(cli.Name);
+  $("#txtPhone").val(cli.Phone);
+  $("#txtEmail").val(cli.Email);
+  $("#txtID").attr("readonly","readonly");
+  $("#txtName").focus();
+});
 
-Read more: http://mrbool.com/creating-a-crud-form-with-html5-local-storage-and-json/26719#ixzz32Nc1sK54
 
-Read more: http://mrbool.com/creating-a-crud-form-with-html5-local-storage-and-json/26719#ixzz32NbNDrT4
+$(".btnDelete").bind("click", function(){
+  selected_index = parseInt($(this).attr("alt").replace("Delete", ""));
+  Delete();
+  List();
+});
+
